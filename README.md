@@ -2,8 +2,8 @@
 
 [![CI](https://img.shields.io/github/actions/workflow/status/panel-extensions/panel-mosaic/ci.yml?style=flat-square&branch=main)](https://github.com/panel-extensions/panel-mosaic/actions/workflows/ci.yml)
 [![conda-forge](https://img.shields.io/conda/vn/conda-forge/panel-mosaic?logoColor=white&logo=conda-forge&style=flat-square)](https://prefix.dev/channels/conda-forge/packages/panel-mosaic)
-[![pypi-version](https://img.shields.io/pypi/v/panel-mosaic.svg?logo=pypi&logoColor=white&style=flat-square)](https://pypi.org/project/panel-mosaic)
-[![python-version](https://img.shields.io/pypi/pyversions/panel-mosaic?logoColor=white&logo=python&style=flat-square)](https://pypi.org/project/panel-mosaic)
+[![pypi-version](https://img.shields.io/pypi/v/panel-mosaic-viz.svg?logo=pypi&logoColor=white&style=flat-square)](https://pypi.org/project/panel-mosaic-viz)
+[![python-version](https://img.shields.io/pypi/pyversions/panel-mosaic-viz?logoColor=white&logo=python&style=flat-square)](https://pypi.org/project/panel-mosaic-viz)
 
 
 A Panel extension for Mosaic visualizations backed by DuckDB.
@@ -23,7 +23,7 @@ This project is **in its early stages**, so if you find a version that suits you
 Install it via `pip`:
 
 ```bash
-pip install panel-mosaic
+pip install panel-mosaic-viz
 ```
 
 ## Usage

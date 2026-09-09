@@ -101,7 +101,7 @@ link = "https://twitter.com/panel_org"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/python"
-link = "https://pypi.org/project/panel-mosaic"
+link = "https://pypi.org/project/panel-mosaic-viz"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/discourse"

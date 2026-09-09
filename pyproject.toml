@@ -12,7 +12,7 @@ build-backend = "hatchling.build"
 version_scheme = "post-release"
 
 [project]
-name = "panel-mosaic"
+name = "panel-mosaic-viz"
 dynamic = ["version"]
 description = 'A Panel extension for Mosaic visualizations backed by DuckDB.'
 readme = "README.md"
@@ -147,3 +147,6 @@ check_untyped_defs = true
 [tool.hatch.version]
 source = "vcs"
 raw-options = { version_scheme = "no-guess-dev" }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/panel_mosaic"]
