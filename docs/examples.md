@@ -1,0 +1,13 @@
+# Examples
+
+```python
+import panel as pn
+pn.extension()
+
+x_slider = pn.widgets.IntSlider(name='x', start=0, end=100)
+
+def apply_square(x):
+    return f'{x} squared is {x**2}'
+
+pn.Row(x_slider, pn.bind(apply_square, x_slider))
+```
