@@ -53,18 +53,21 @@ python = "3.12.*"
 [feature.py313.dependencies]
 python = "3.13.*"
 
-[feature.test-ui]
-channels = ["microsoft"]
-
 [feature.test-ui.dependencies]
-playwright = { version = "*", channel = "microsoft" }
-pytest-playwright = { version = "*", channel = "microsoft" }
 pytest-asyncio = "*"
 pytest-rerunfailures = "*"
 pytest-xdist = "*"
 jupyter_server = "*"
 esbuild = "*"
 packaging = "*"
+nodejs = "*"
+
+[feature.test-ui.activation]
+env = { PLAYWRIGHT_NODEJS_PATH = "node" }
+
+[feature.test-ui.pypi-dependencies]
+playwright = "*"
+pytest-playwright = "*"
 
 [feature.test-ui.tasks]
 _install-ui = 'playwright install chromium'
