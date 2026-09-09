@@ -1,15 +1,14 @@
 """Panel component for interactive Mosaic and vgplot visualizations."""
+
 from __future__ import annotations
 
 import base64
 import logging
-
 from typing import Any
 
 import duckdb
 import param
 import pyarrow as pa  # type: ignore[import-untyped]
-
 from panel.custom import JSComponent
 
 logger = logging.getLogger(__name__)
@@ -97,20 +96,29 @@ class Mosaic(JSComponent):
     True
     """
 
-    params = param.Dict(default={}, doc="""
+    params = param.Dict(
+        default={},
+        doc="""
         Live Mosaic parameters and selections, keyed by name. Each selection
         includes its current value and SQL predicate.
-    """)
+    """,
+    )
 
-    preagg_schema = param.String(default="", doc="""
+    preagg_schema = param.String(
+        default="",
+        doc="""
         Schema where Mosaic may materialize pre-aggregated views. An empty
         value uses Mosaic's default schema.
-    """)
+    """,
+    )
 
-    spec = param.Dict(default={}, doc="""
+    spec = param.Dict(
+        default={},
+        doc="""
         Mosaic specification to render. Marks reference registered DuckDB
         tables through ``data: {from: <table_name>}``.
-    """)
+    """,
+    )
 
     _esm = "mosaic.js"
 
