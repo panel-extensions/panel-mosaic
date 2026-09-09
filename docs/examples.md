@@ -1,13 +1,22 @@
 # Examples
 
 ```python
+import duckdb
 import panel as pn
+
+from panel_mosaic import Mosaic
+
 pn.extension()
 
-x_slider = pn.widgets.IntSlider(name='x', start=0, end=100)
+con = duckdb.connect()
+con.execute("CREATE TABLE points AS SELECT * FROM (VALUES (1, 2), (2, 4), (3, 3)) AS t(x, y)")
 
-def apply_square(x):
-    return f'{x} squared is {x**2}'
-
-pn.Row(x_slider, pn.bind(apply_square, x_slider))
+Mosaic(
+    {
+        "plot": [
+            {"mark": "dot", "data": {"from": "points"}, "x": "x", "y": "y"},
+        ]
+    },
+    con=con,
+).servable()
 ```

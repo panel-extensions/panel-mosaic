@@ -1,1 +1,1 @@
-recursive-include panel_mosaic models/*.js
+recursive-include src/panel_mosaic *.js

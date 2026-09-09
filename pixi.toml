@@ -14,12 +14,16 @@ pip = "*"
 hatchling = "*"
 hatch-vcs = "*"
 panel = ">=1.5.0"
+duckdb = ">=1.0.0"
+param = ">=2.0.0"
+pyarrow = ">=14.0.0"
 setuptools = ">=61"
 setuptools-scm = "*"
 
 [feature.test.dependencies]
 pytest = ">=6"
 pytest-cov = "*"
+pytest-asyncio = "*"
 mypy = "*"
 [feature.test.tasks]
 test = "pytest"

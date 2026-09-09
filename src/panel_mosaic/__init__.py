@@ -1,9 +1,9 @@
-"""Accessible imports for the panel_mosaic package."""
+"""Panel components for Mosaic visualizations."""
 
 import importlib.metadata
 import warnings
 
-from panel_mosaic.main import create_app
+from panel_mosaic.mosaic import Mosaic
 
 try:
     __version__ = importlib.metadata.version(__name__)
@@ -13,5 +13,5 @@ except importlib.metadata.PackageNotFoundError as e:  # pragma: no cover
 
 __all__: list[str] = [
     "__version__",
-    "create_app",
+    "Mosaic",
 ]
