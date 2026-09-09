@@ -6,6 +6,11 @@ on:
   push:
     branches:
       - main
+
+defaults:
+  run:
+    shell: bash
+
 # Automatically stop old builds on the same branch/PR
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -31,7 +36,7 @@ jobs:
             code:
               - 'src/**'
               - 'pyproject.toml'
-              - '.github/workflows/ci.yaml'
+              - '.github/workflows/ci.yml'
             img:
               - '**/*.png'
       - name: Set matrix option
