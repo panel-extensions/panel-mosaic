@@ -6,7 +6,7 @@ import warnings
 from panel_mosaic.mosaic import Mosaic
 
 try:
-    __version__ = importlib.metadata.version(__name__)
+    __version__ = importlib.metadata.version("panel-mosaic-viz")
 except importlib.metadata.PackageNotFoundError as e:  # pragma: no cover
     warnings.warn(f"Could not determine version of {__name__}\n{e!s}", stacklevel=2)
     __version__ = "unknown"
