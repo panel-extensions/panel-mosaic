@@ -150,3 +150,6 @@ raw-options = { version_scheme = "no-guess-dev" }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/panel_mosaic"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/build-artifacts"]

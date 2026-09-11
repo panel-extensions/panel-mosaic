@@ -34,8 +34,8 @@ python-build = "*"
 twine = "*"
 wheel = "*"
 [feature.build.tasks]
-build-wheel = "python -m build --no-isolation ."
-check-wheel = "twine check dist/*"
+build-wheel = "python -m build --no-isolation --outdir build-artifacts ."
+check-wheel = "twine check build-artifacts/*"
 
 [feature.lint.dependencies]
 pre-commit = "*"
