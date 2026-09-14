@@ -60,6 +60,8 @@ Save the example as `app.py`, then launch it with:
 panel serve app.py --show
 ```
 
+![Monthly revenue chart rendered with panel-mosaic](assets/revenue-dashboard.jpg)
+
 ## Use an in-memory frame
 
 When your data is already in a pandas or PyArrow object, register it through `data` instead of manually creating a DuckDB table:

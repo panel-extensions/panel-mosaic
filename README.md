@@ -10,8 +10,6 @@
 
 Build linked, browser-interactive charts without embedding an entire dataset in the page. Mosaic sends SQL to DuckDB and returns only the results each view needs.
 
-![Monthly revenue chart rendered with panel-mosaic](docs/assets/revenue-dashboard.jpg)
-
 ## Why panel-mosaic?
 
 - **Declarative charts:** Render Mosaic and vgplot specifications directly in a Panel app.
@@ -90,6 +88,8 @@ Run the app:
 ```bash
 panel serve app.py --show
 ```
+
+![Monthly revenue chart rendered with panel-mosaic](docs/assets/revenue-dashboard.jpg)
 
 ## How it works
 
