@@ -2,6 +2,7 @@
 
 import base64
 import io
+from pathlib import Path
 
 import duckdb
 import pyarrow as pa
@@ -78,6 +79,12 @@ def test_esm_module_is_packaged():
 
     assert esm is not None and esm.is_file()
     assert "@uwdata/mosaic-spec" in esm.read_text()
+
+
+def test_stylesheet_is_packaged():
+    stylesheet = Path(__file__).parents[1] / "src" / "panel_mosaic" / Mosaic._stylesheets[0]
+
+    assert stylesheet.is_file()
 
 
 def test_importmap_uses_a_single_mosaic_entry_point():

@@ -62,6 +62,20 @@ panel serve app.py --show
 
 ![Monthly revenue chart rendered with panel-mosaic](assets/revenue-dashboard.jpg)
 
+## Interactive wind map
+
+Mosaic features such as vector marks, linked selections, legends, inputs, and
+vertically concatenated views work inside a `Mosaic` pane. The complete,
+runnable example is available in
+[`examples/wind_map.py`](https://github.com/panel-extensions/panel-mosaic/blob/main/examples/wind_map.py).
+
+```bash
+panel serve examples/wind_map.py --show
+```
+
+Drag over the map or legend to filter the vectors, and use the slider to alter
+their length.
+
 ## Use an in-memory frame
 
 When your data is already in a pandas or PyArrow object, register it through `data` instead of manually creating a DuckDB table:
