@@ -1,5 +1,17 @@
 # Examples
 
+## Axes and gridlines
+
+Mosaic axis and grid marks work alongside normal plot options in a Panel
+application. The runnable source is
+[`examples/axes.py`](https://github.com/panel-extensions/panel-mosaic/blob/main/examples/axes.py).
+
+```bash
+panel serve examples/axes.py --show
+```
+
+![Axes and gridlines rendered with panel-mosaic](assets/axes-gridlines.png)
+
 ## Monthly revenue dashboard
 
 This example creates the stacked bar chart shown on the home page. It uses an in-memory DuckDB table, but the same component can use a connection that already contains your data.

@@ -13,6 +13,24 @@ from panel_mosaic import Mosaic
 pytestmark = pytest.mark.ui
 
 
+AXES_SPEC = {
+    "plot": [
+        {"mark": "gridY", "strokeDasharray": "0.75 2", "strokeOpacity": 1},
+        {"mark": "axisY", "anchor": "left", "tickSize": 0, "dx": 38, "dy": -4, "lineAnchor": "bottom"},
+        {"mark": "axisY", "anchor": "right", "tickSize": 0, "tickPadding": 5, "label": "y-axis", "labelAnchor": "center"},
+        {"mark": "axisX", "label": "x-axis", "labelAnchor": "center"},
+        {"mark": "gridX"},
+        {"mark": "ruleY", "data": [0]},
+    ],
+    "xDomain": [0, 100],
+    "yDomain": [0, 100],
+    "xInsetLeft": 36,
+    "marginLeft": 0,
+    "marginRight": 35,
+    "width": 680,
+}
+
+
 WIND_MAP_SPEC = {
     "params": {"selected": {"select": "union"}, "length": 2},
     "vconcat": [
@@ -42,6 +60,14 @@ WIND_MAP_SPEC = {
         {"input": "slider", "min": 1, "max": 7, "step": 0.1, "as": "$length", "label": "Vector Length"},
     ],
 }
+
+
+def test_renders_axis_and_grid_marks(page):
+    """Render Mosaic's standalone axis and grid marks."""
+    serve_component(page, Mosaic(AXES_SPEC))
+
+    expect(page.locator(".mosaic-pane svg")).to_have_count(1, timeout=15_000)
+    expect(page.locator(".mosaic-pane-error")).to_have_count(0)
 
 
 def test_renders_interactive_wind_map(page):
