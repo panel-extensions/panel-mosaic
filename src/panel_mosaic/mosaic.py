@@ -16,52 +16,6 @@ logger = logging.getLogger(__name__)
 MOSAIC_VERSION = "0.31.0"
 FLECHETTE_VERSION = "2.5.0"
 
-_CSS = """
-.mosaic-pane .input { margin-right: 1em; }
-.mosaic-pane .input > * { vertical-align: middle; }
-.mosaic-pane .mosaic-pane-error {
-  white-space: pre-wrap;
-  margin: 0;
-  padding: 0.5em;
-  color: #b00020;
-  font-size: 12px;
-}
-.mosaic-pane table {
-  position: relative;
-  table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-variant-numeric: tabular-nums;
-  box-sizing: border-box;
-  max-width: initial;
-  min-height: 33px;
-  margin: 0;
-  width: 100%;
-  font-size: 13px;
-  line-height: 15.6px;
-}
-.mosaic-pane thead tr th {
-  position: sticky;
-  top: 0;
-  background: #fff;
-  cursor: ns-resize;
-  border-bottom: solid 1px #ccc;
-}
-.mosaic-pane tbody tr:hover { background: #eef; }
-.mosaic-pane th { color: #111; text-align: left; vertical-align: bottom; }
-.mosaic-pane td,
-.mosaic-pane th {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  padding: 3px 6.5px 3px 0;
-}
-.mosaic-pane tbody tr:first-child td { padding-top: 4px; }
-.mosaic-pane td,
-.mosaic-pane tr:not(:last-child) th { border-bottom: solid 1px #eee; }
-.mosaic-pane td { color: #444; vertical-align: top; }
-"""
-
 
 class Mosaic(JSComponent):
     """Render a declarative Mosaic or vgplot specification in Panel.
@@ -129,7 +83,7 @@ class Mosaic(JSComponent):
         }
     }
 
-    _stylesheets = [_CSS]
+    _stylesheets = ["mosaic.css"]
 
     def __init__(
         self,
