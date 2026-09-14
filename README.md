@@ -10,7 +10,7 @@
 
 Build linked, browser-interactive charts without embedding an entire dataset in the page. Mosaic sends SQL to DuckDB and returns only the results each view needs.
 
-![Monthly revenue dashboard rendered with panel-mosaic](docs/assets/revenue-dashboard.svg)
+![Monthly revenue chart rendered with panel-mosaic](docs/assets/revenue-dashboard.jpg)
 
 ## Why panel-mosaic?
 

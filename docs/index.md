@@ -4,7 +4,7 @@
 
 `panel-mosaic` lets Panel applications render declarative Mosaic and vgplot charts. It keeps data in DuckDB and sends only the result of each browser-side query to the chart, making it a strong fit for linked views and large datasets.
 
-![Monthly revenue dashboard rendered with panel-mosaic](assets/revenue-dashboard.svg)
+![Monthly revenue chart rendered with panel-mosaic](assets/revenue-dashboard.jpg)
 
 ## Start here
 
