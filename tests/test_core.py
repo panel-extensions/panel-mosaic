@@ -27,8 +27,15 @@ def pane():
 def test_holds_spec_and_uses_supplied_connection(pane):
     assert pane.spec == SPEC
     assert pane.ready is False
+    assert pane.responsive is False
     assert pane.error == ""
     assert pane.connection.query("SELECT count(*) FROM points").fetchone()[0] == 3
+
+
+def test_can_opt_in_to_responsive_layout():
+    pane = Mosaic(SPEC, responsive=True)
+
+    assert pane.responsive is True
 
 
 def test_registers_data_on_a_new_connection():
