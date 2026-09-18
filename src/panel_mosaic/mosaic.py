@@ -68,6 +68,14 @@ class Mosaic(JSComponent):
     """,
     )
 
+    responsive = param.Boolean(
+        default=False,
+        doc="""
+        Whether plots should resize to fill the component's available width
+        and height. This is useful with a stretching Panel layout.
+    """,
+    )
+
     error = param.String(
         default="",
         doc="""

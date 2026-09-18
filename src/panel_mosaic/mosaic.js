@@ -68,6 +68,112 @@ export function render({model, el}) {
   })
 
   let applied = null
+  let dashboard = null
+  let resizeFrame = null
+  let fitting = false
+  let fitAgain = false
+
+  function dashboardBounds(root) {
+    const selector = ".plot > svg, .legend, [id^='table-'], select, input"
+    const nodes = [...root.querySelectorAll(selector)]
+    const rects = nodes
+      .map((node) => node.getBoundingClientRect())
+      .filter((rect) => rect.width > 0 && rect.height > 0)
+    if (rects.length === 0) {
+      return null
+    }
+    return {
+      width: Math.max(...rects.map((rect) => rect.right))
+        - Math.min(...rects.map((rect) => rect.left)),
+      height: Math.max(...rects.map((rect) => rect.bottom))
+        - Math.min(...rects.map((rect) => rect.top)),
+    }
+  }
+
+  function plotElements(root) {
+    return [
+      ...(root.matches?.(".plot") ? [root] : []),
+      ...root.querySelectorAll(".plot"),
+    ]
+  }
+
+  function scheduleFit() {
+    if (!dashboard || !model.responsive) {
+      return
+    }
+    if (fitting) {
+      fitAgain = true
+      return
+    }
+    cancelAnimationFrame(resizeFrame)
+    resizeFrame = requestAnimationFrame(() => fitDashboard())
+  }
+
+  async function fitDashboard(pass = 0) {
+    const root = dashboard?.element
+    if (!root || !root.isConnected) {
+      return
+    }
+    if (fitting) {
+      fitAgain = true
+      return
+    }
+
+    fitting = true
+    try {
+      const available = el.getBoundingClientRect()
+      const content = dashboardBounds(root)
+      if (!content || available.width <= 0 || available.height <= 0) {
+        return
+      }
+
+      const widthRatio = available.width / content.width
+      const heightRatio = available.height / content.height
+      if (Math.abs(widthRatio - 1) < 0.02 && Math.abs(heightRatio - 1) < 0.02) {
+        return
+      }
+
+      const updates = []
+      for (const element of plotElements(root)) {
+        const plot = element.value
+        if (!plot?.getAttribute || !plot?.setAttribute || !plot?.update) {
+          continue
+        }
+        const width = plot.getAttribute("width")
+        const height = plot.getAttribute("height")
+        let changed = false
+        if (Number.isFinite(width)) {
+          const next = Math.min(
+            4 * available.width,
+            Math.max(160, Math.round(width * Math.max(0.25, Math.min(4, widthRatio))))
+          )
+          changed = plot.setAttribute("width", next, {silent: true}) || changed
+        }
+        if (Number.isFinite(height)) {
+          const next = Math.min(
+            4 * available.height,
+            Math.max(120, Math.round(height * Math.max(0.25, Math.min(4, heightRatio))))
+          )
+          changed = plot.setAttribute("height", next, {silent: true}) || changed
+        }
+        if (changed) {
+          updates.push(plot.update())
+        }
+      }
+      await Promise.allSettled(updates)
+      if (updates.length > 0 && pass < 2) {
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+        fitting = false
+        await fitDashboard(pass + 1)
+      }
+    } finally {
+      fitting = false
+      if (fitAgain) {
+        fitAgain = false
+        scheduleFit()
+      }
+    }
+  }
 
   async function updateSpec() {
     const spec = model.spec
@@ -86,6 +192,7 @@ export function render({model, el}) {
 
     try {
       const dom = await astToDOM(parseSpec(spec), {api: ctx.api})
+      dashboard = dom
       el.replaceChildren(dom.element)
 
       let params = {}
@@ -105,7 +212,9 @@ export function render({model, el}) {
       }
       publish()
       model.ready = true
+      scheduleFit()
     } catch (error) {
+      dashboard = null
       model.ready = false
       model.error = String(error.message ?? error)
       const paneError = document.createElement("pre")
@@ -123,10 +232,17 @@ export function render({model, el}) {
 
   model.on("spec", () => updateSpec())
   model.on("preagg_schema", () => configureCoordinator())
+  model.on("responsive", () => scheduleFit())
+  const resizeObserver = new ResizeObserver(() => scheduleFit())
+  resizeObserver.observe(el)
   configureCoordinator()
   updateSpec()
 
-  return () => coordinator.clear()
+  return () => {
+    resizeObserver.disconnect()
+    cancelAnimationFrame(resizeFrame)
+    coordinator.clear()
+  }
 }
 
 export default {render}
