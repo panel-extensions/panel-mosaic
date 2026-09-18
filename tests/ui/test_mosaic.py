@@ -6,6 +6,7 @@ import pytest
 pytest.importorskip("playwright")
 
 from panel.tests.util import serve_component
+from panel.tests.util import wait_until
 from playwright.sync_api import expect
 
 from panel_mosaic import Mosaic
@@ -59,8 +60,39 @@ def test_renders_interactive_wind_map(page):
         CROSS JOIN range(32, 43) AS y(latitude)
     """)
 
-    serve_component(page, Mosaic(WIND_MAP_SPEC, con=con))
+    pane = Mosaic(WIND_MAP_SPEC, con=con)
+    serve_component(page, pane)
 
     expect(page.locator(".mosaic-pane svg").first).to_be_visible(timeout=15_000)
     expect(page.locator(".mosaic-pane input[type=range]")).to_have_count(1)
     expect(page.locator(".mosaic-pane-error")).to_have_count(0)
+    wait_until(lambda: pane.ready, page, timeout=15_000)
+    assert pane.error == ""
+
+
+def test_reports_browser_render_errors(page):
+    """Synchronize Mosaic parser failures back to the Python component."""
+    pane = Mosaic({"plot": [{"mark": "not-a-mosaic-mark"}]})
+
+    serve_component(page, pane)
+
+    expect(page.locator(".mosaic-pane-error")).to_be_visible(timeout=15_000)
+    wait_until(lambda: bool(pane.error), page, timeout=15_000)
+    assert pane.ready is False
+
+    pane.spec = {"plot": [{"mark": "ruleY", "data": [0]}]}
+
+    expect(page.locator(".mosaic-pane svg")).to_be_visible(timeout=15_000)
+    wait_until(lambda: pane.ready, page, timeout=15_000)
+    assert pane.error == ""
+
+
+def test_reports_query_errors(page):
+    """Synchronize DuckDB query failures back to the Python component."""
+    pane = Mosaic({"plot": [{"mark": "dot", "data": {"from": "missing"}, "x": "x", "y": "y"}]})
+
+    serve_component(page, pane)
+
+    wait_until(lambda: bool(pane.error), page, timeout=15_000)
+    assert "missing" in pane.error
+    assert pane.ready is False

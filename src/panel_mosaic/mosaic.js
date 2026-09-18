@@ -55,6 +55,8 @@ export function render({model, el}) {
     }
     pending.delete(msg.uuid)
     if (msg.error) {
+      model.ready = false
+      model.error = msg.error
       query.reject(new Error(msg.error))
     } else if (msg.type === "arrow") {
       query.resolve(tableFromIPC(decodeBase64(msg.data), {useDate: true}))
@@ -74,6 +76,8 @@ export function render({model, el}) {
       return
     }
     applied = json
+    model.ready = false
+    model.error = ""
     coordinator.clear()
     if (spec == null || Object.keys(spec).length === 0) {
       el.replaceChildren()
@@ -100,12 +104,14 @@ export function render({model, el}) {
         })
       }
       publish()
+      model.ready = true
     } catch (error) {
+      model.ready = false
+      model.error = String(error.message ?? error)
       const paneError = document.createElement("pre")
       paneError.className = "mosaic-pane-error"
       paneError.textContent = `Could not render Mosaic spec:\n${error.message ?? error}`
       el.replaceChildren(paneError)
-      throw error
     }
   }
 
