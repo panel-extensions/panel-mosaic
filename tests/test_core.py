@@ -26,6 +26,8 @@ def pane():
 
 def test_holds_spec_and_uses_supplied_connection(pane):
     assert pane.spec == SPEC
+    assert pane.ready is False
+    assert pane.error == ""
     assert pane.connection.query("SELECT count(*) FROM points").fetchone()[0] == 3
 
 

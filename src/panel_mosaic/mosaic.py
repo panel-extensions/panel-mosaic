@@ -58,6 +58,26 @@ class Mosaic(JSComponent):
     """,
     )
 
+    ready = param.Boolean(
+        default=False,
+        doc="""
+        Whether the current specification rendered successfully in the browser.
+
+        This becomes ``False`` while a specification is being rendered and
+        remains false when parsing, rendering, or querying fails.
+    """,
+    )
+
+    error = param.String(
+        default="",
+        doc="""
+        The latest browser-side parsing, rendering, or query error.
+
+        An empty string indicates that no error is associated with the current
+        specification.
+    """,
+    )
+
     preagg_schema = param.String(
         default="",
         doc="""
