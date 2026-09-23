@@ -113,7 +113,7 @@ def test_stretch_both_fills_the_available_space(page):
         ],
     }
     pane = Mosaic(spec, responsive=True, sizing_mode="stretch_both")
-    layout = pn.Column(pane, width=800, height=600, sizing_mode="fixed")
+    layout = pn.Column(pane, width=1280, height=572, sizing_mode="fixed")
 
     serve_component(page, layout)
 
@@ -126,6 +126,7 @@ def test_stretch_both_fills_the_available_space(page):
         page,
         timeout=15_000,
     )
+    assert chart.evaluate("el => getComputedStyle(el).fontSize") == "13px"
 
     mosaic_box = mosaic.bounding_box()
     chart_box = chart.bounding_box()
@@ -135,6 +136,43 @@ def test_stretch_both_fills_the_available_space(page):
     slider = mosaic.locator("input[type=range]")
     slider.evaluate("el => { el.value = 4; el.dispatchEvent(new Event('input', {bubbles: true})) }")
     wait_until(lambda: pane.params["threshold"]["value"] == 4, page, timeout=15_000)
+
+
+def test_responsive_plot_fills_a_reactive_host(page):
+    """Fit after a ParamFunction mounts Mosaic into a stretching split pane."""
+    spec = {
+        "plot": [{"mark": "ruleY", "data": [0]}],
+        "width": 640,
+        "height": 420,
+    }
+    pane = Mosaic(spec, responsive=True, sizing_mode="stretch_both")
+    reactive = pn.param.ParamFunction(pn.bind(lambda: pane), sizing_mode="stretch_both")
+    layout = pn.Column(
+        reactive,
+        width=900,
+        height=572,
+        sizing_mode="fixed",
+        css_classes=["responsive-test-layout"],
+    )
+
+    serve_component(page, layout)
+
+    mosaic = page.locator(".mosaic-pane")
+    host = page.locator(".responsive-test-layout")
+    chart = mosaic.locator("svg")
+    expect(chart).to_be_visible(timeout=15_000)
+    wait_until(lambda: pane.ready, page, timeout=15_000)
+    assert mosaic.bounding_box()["height"] >= 0.9 * host.bounding_box()["height"]
+    wait_until(
+        lambda: chart.bounding_box()["width"] >= 0.9 * mosaic.bounding_box()["width"],
+        page,
+        timeout=15_000,
+    )
+    wait_until(
+        lambda: chart.bounding_box()["height"] >= 0.9 * mosaic.bounding_box()["height"],
+        page,
+        timeout=15_000,
+    )
 
 
 def test_linked_dashboard_fills_the_available_space(page):

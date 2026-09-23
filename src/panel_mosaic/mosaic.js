@@ -69,7 +69,9 @@ export function render({model, el}) {
 
   let applied = null
   let dashboard = null
+  let dashboardObserver = null
   let resizeFrame = null
+  let resizeTimer = null
   let fitting = false
   let fitAgain = false
 
@@ -97,7 +99,7 @@ export function render({model, el}) {
     ]
   }
 
-  function scheduleFit() {
+  function scheduleFit(delay = 0) {
     if (!dashboard || !model.responsive) {
       return
     }
@@ -106,7 +108,14 @@ export function render({model, el}) {
       return
     }
     cancelAnimationFrame(resizeFrame)
-    resizeFrame = requestAnimationFrame(() => fitDashboard())
+    clearTimeout(resizeTimer)
+    if (delay > 0) {
+      resizeTimer = setTimeout(() => {
+        resizeFrame = requestAnimationFrame(() => fitDashboard())
+      }, delay)
+    } else {
+      resizeFrame = requestAnimationFrame(() => fitDashboard())
+    }
   }
 
   async function fitDashboard(pass = 0) {
@@ -185,6 +194,8 @@ export function render({model, el}) {
     model.ready = false
     model.error = ""
     coordinator.clear()
+    dashboardObserver?.disconnect()
+    dashboardObserver = null
     if (spec == null || Object.keys(spec).length === 0) {
       el.replaceChildren()
       return
@@ -194,6 +205,11 @@ export function render({model, el}) {
       const dom = await astToDOM(parseSpec(spec), {api: ctx.api})
       dashboard = dom
       el.replaceChildren(dom.element)
+      // Plot marks query asynchronously and insert their SVG after astToDOM
+      // returns. Observe that insertion so responsive fitting uses real chart
+      // bounds instead of running once against an empty plot container.
+      dashboardObserver = new MutationObserver(() => scheduleFit())
+      dashboardObserver.observe(dom.element, {childList: true, subtree: true})
 
       let params = {}
       const snapshot = (param, value) => ({
@@ -213,6 +229,11 @@ export function render({model, el}) {
       publish()
       model.ready = true
       scheduleFit()
+      // A reactive Panel host may attach this DOM after the first animation
+      // frame. ResizeObserver can also report the pre-layout size in that
+      // window, so run one deferred pass once the surrounding split layout
+      // has settled.
+      scheduleFit(100)
     } catch (error) {
       dashboard = null
       model.ready = false
@@ -240,7 +261,9 @@ export function render({model, el}) {
 
   return () => {
     resizeObserver.disconnect()
+    dashboardObserver?.disconnect()
     cancelAnimationFrame(resizeFrame)
+    clearTimeout(resizeTimer)
     coordinator.clear()
   }
 }
